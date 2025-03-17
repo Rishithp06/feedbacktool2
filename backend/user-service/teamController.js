@@ -1,11 +1,11 @@
 const pool = require("../config/db");
 
-// ✅ Create a Team (Admins & Super Admins Only)
+// ✅ Create a Team with Manual User Entry (Admins Only)
 exports.createTeam = async (req, res) => {
-    const { teamName, emailGroupName } = req.body;
+    const { teamName, userEmails } = req.body; // userEmails is a comma-separated string of emails
 
     try {
-        // Insert the new team
+        // ✅ Insert the new team
         const newTeam = await pool.query(
             "INSERT INTO teams (name, created_by) VALUES ($1, $2) RETURNING id, name",
             [teamName, req.user.id]
@@ -13,19 +13,25 @@ exports.createTeam = async (req, res) => {
 
         const teamId = newTeam.rows[0].id;
 
-        // ✅ Automatically add all users from the given email group to this team
-        if (emailGroupName) {
-            const usersInGroup = await pool.query(
-                "SELECT user_id FROM email_groups WHERE name = $1",
-                [emailGroupName]
-            );
+        // ✅ Convert emails to an array
+        const emailsArray = userEmails.split(",").map(email => email.trim());
 
-            for (let user of usersInGroup.rows) {
-                await pool.query("INSERT INTO team_members (team_id, user_id) VALUES ($1, $2)", [teamId, user.user_id]);
-            }
+        // ✅ Fetch user IDs from the database
+        const users = await pool.query(
+            "SELECT id, email FROM users WHERE email = ANY($1)",
+            [emailsArray]
+        );
+
+        if (users.rows.length !== emailsArray.length) {
+            return res.status(400).json({ message: "Some emails do not exist in the system!" });
         }
 
-        res.status(201).json({ message: "Team created successfully!", team: newTeam.rows[0] });
+        // ✅ Add users to the team
+        for (let user of users.rows) {
+            await pool.query("INSERT INTO team_members (team_id, user_id) VALUES ($1, $2)", [teamId, user.id]);
+        }
+
+        res.status(201).json({ message: "Team created successfully with selected users!", team: newTeam.rows[0] });
     } catch (error) {
         res.status(500).json({ message: "Error creating team", error: error.message });
     }
@@ -59,10 +65,29 @@ exports.getTeamMembers = async (req, res) => {
 
 // ✅ Add User to Team (Admins & Super Admins Only)
 exports.addUserToTeam = async (req, res) => {
-    const { teamId, userId } = req.body;
+    const { teamId, userEmail } = req.body; // User email instead of user ID
 
     try {
-        await pool.query("INSERT INTO team_members (team_id, user_id) VALUES ($1, $2)", [teamId, userId]);
+        // ✅ Get user ID from email
+        const user = await pool.query("SELECT id FROM users WHERE email = $1", [userEmail]);
+
+        if (user.rows.length === 0) {
+            return res.status(400).json({ message: "User not found in the system!" });
+        }
+
+        // ✅ Check if user is already in the team
+        const existingMember = await pool.query(
+            "SELECT id FROM team_members WHERE team_id = $1 AND user_id = $2",
+            [teamId, user.rows[0].id]
+        );
+
+        if (existingMember.rows.length > 0) {
+            return res.status(400).json({ message: "User is already in this team!" });
+        }
+
+        // ✅ Add user to team
+        await pool.query("INSERT INTO team_members (team_id, user_id) VALUES ($1, $2)", [teamId, user.rows[0].id]);
+
         res.json({ message: "User added to team successfully!" });
     } catch (error) {
         res.status(500).json({ message: "Error adding user to team", error: error.message });
@@ -71,10 +96,19 @@ exports.addUserToTeam = async (req, res) => {
 
 // ✅ Remove User from Team (Admins & Super Admins Only)
 exports.removeUserFromTeam = async (req, res) => {
-    const { teamId, userId } = req.body;
+    const { teamId, userEmail } = req.body; // User email instead of user ID
 
     try {
-        await pool.query("DELETE FROM team_members WHERE team_id = $1 AND user_id = $2", [teamId, userId]);
+        // ✅ Get user ID from email
+        const user = await pool.query("SELECT id FROM users WHERE email = $1", [userEmail]);
+
+        if (user.rows.length === 0) {
+            return res.status(400).json({ message: "User not found in the system!" });
+        }
+
+        // ✅ Remove user from the team
+        await pool.query("DELETE FROM team_members WHERE team_id = $1 AND user_id = $2", [teamId, user.rows[0].id]);
+
         res.json({ message: "User removed from team successfully!" });
     } catch (error) {
         res.status(500).json({ message: "Error removing user from team", error: error.message });
