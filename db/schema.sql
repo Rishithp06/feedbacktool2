@@ -63,3 +63,19 @@ CREATE TABLE password_resets (
     expires_at TIMESTAMP NOT NULL,
     UNIQUE (user_id, reset_token)
 );
+
+-- Create Email Groups Table
+CREATE TABLE IF NOT EXISTS email_groups (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) UNIQUE NOT NULL,
+    created_by UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create Email Group Members Table (Links Users to Email Groups)
+CREATE TABLE IF NOT EXISTS email_group_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    group_id UUID REFERENCES email_groups(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE (group_id, user_id)
+);
