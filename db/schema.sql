@@ -30,28 +30,31 @@ CREATE TABLE team_members (
 -- Feedback Table
 CREATE TABLE feedback (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    sender_id UUID NULL,  -- NULL if anonymous
-    receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    sender_id UUID REFERENCES users(id) ON DELETE SET NULL,  -- NULL if anonymous
+    recipient_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     team_id UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
-    type VARCHAR(20) CHECK (type IN ('positive', 'improvement')),
+    feedback_type VARCHAR(20) CHECK (feedback_type IN ('positive', 'improvement')) NOT NULL,
     message TEXT NOT NULL,
     is_anonymous BOOLEAN DEFAULT FALSE,
     is_read BOOLEAN DEFAULT FALSE,
-    is_sent BOOLEAN DEFAULT FALSE,
-    email_sent BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT NOW(),
-    scheduled_at TIMESTAMP NOT NULL
+    is_sent BOOLEAN DEFAULT FALSE,  -- Marks if feedback has been processed for scheduling
+    email_sent BOOLEAN DEFAULT FALSE,  -- Marks if email has been sent
+    scheduled_at TIMESTAMP NOT NULL,  -- When the feedback is scheduled to be sent
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Feedback Schedule Table
 CREATE TABLE feedback_schedule (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    feedback_id UUID NOT NULL REFERENCES feedback(id) ON DELETE CASCADE,
+    feedback_id UUID REFERENCES feedback(id) ON DELETE CASCADE,
     team_id UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
     scheduled_by UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    schedule_type VARCHAR(20) CHECK (schedule_type IN ('specific_date', 'periodic')),
+    schedule_type VARCHAR(20) CHECK (schedule_type IN ('specific_date', 'periodic')) NOT NULL,
     periodic_type VARCHAR(20) CHECK (periodic_type IN ('daily', 'weekly', 'monthly')) NULL,  
+    day_of_week VARCHAR(10) CHECK (day_of_week IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')) NULL,  
     scheduled_at TIMESTAMP NOT NULL,  
+    created_at TIMESTAMP DEFAULT NOW(),
+
     sent_at TIMESTAMP NULL  -- NULL until feedback is sent
 );
 
