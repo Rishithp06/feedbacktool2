@@ -70,3 +70,40 @@ exports.removeUserFromEmailGroup = async (req, res) => {
         res.status(500).json({ message: "Error removing user from email group", error: error.message });
     }
 };
+// ✅ Get Members of an Email Group (Admins & Super Admins Only)
+exports.getEmailGroupMembers = async (req, res) => {
+    const { groupName } = req.params;
+
+    try {
+        const group = await pool.query("SELECT id FROM email_groups WHERE name = $1", [groupName]);
+
+        if (!group.rows.length) {
+            return res.status(404).json({ message: "Email group not found" });
+        }
+
+        const groupId = group.rows[0].id;
+
+        const members = await pool.query(
+            `SELECT users.id, users.name, users.email
+             FROM email_group_members
+             INNER JOIN users ON users.id = email_group_members.user_id
+             WHERE email_group_members.group_id = $1`,
+            [groupId]
+        );
+
+        res.json(members.rows);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching email group members", error: error.message });
+    }
+};
+exports.deleteEmailGroup = async (req, res) => {
+    const { groupId } = req.params;
+
+    try {
+        await pool.query("DELETE FROM email_groups WHERE id = $1", [groupId]);
+        res.json({ message: "Email group deleted successfully!" });
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting group", error: error.message });
+    }
+};
+

@@ -19,8 +19,11 @@
 import UserManagement from './pages/user/UserManagement';
 import CreateTeamPage from './pages/team/CreateTeamPage';
 import TeamListPage from './pages/team/TeamListPage';
-
+import CreateEmailGroupPage from './pages/email/CreateEmailGroupPage';
 import TeamManagement from './pages/team/TeamManagement';
+import EmailGroupListPage from './pages/email/EmailGroupListPage';
+import ManageEmailGroupMembers from './pages/email/ManageEmailGroupMembers';
+import ManageEmail from './pages/email/ManageEmail';
   function App() {
     return (
       <Router>
@@ -105,8 +108,38 @@ import TeamManagement from './pages/team/TeamManagement';
     </AdminProtectedRoute>
   }
 />
-
-
+<Route
+  path="/email-groups/create"
+  element={
+    <AdminProtectedRoute>
+      <CreateEmailGroupPage />
+    </AdminProtectedRoute>
+  }
+/>
+<Route
+  path="/email-groups"
+  element={
+    <AdminProtectedRoute>
+      <EmailGroupListPage />
+    </AdminProtectedRoute>
+  }
+/>
+<Route
+  path="/email-groups/manage/:groupName"
+  element={
+    <AdminProtectedRoute>
+      <ManageEmailGroupMembers />
+    </AdminProtectedRoute>
+  }
+/>
+<Route
+  path="/email-management"
+  element={
+    <AdminProtectedRoute>
+      <ManageEmail />
+    </AdminProtectedRoute>
+  }
+/>
 
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />

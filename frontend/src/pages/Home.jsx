@@ -27,7 +27,7 @@ const Home = () => {
           <div className="admin-dashboard">
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li>
-                <Link to="/email-groups">Manage Email Groups</Link>
+                <Link to="/email-management">Manage Email Groups</Link>
               </li>
               <li>
                 <Link to="/team-management">Manage Teams</Link>
