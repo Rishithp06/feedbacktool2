@@ -95,7 +95,7 @@ exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
     try {
         const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-        if (!user.rows.length) return res.status(400).json({ error: "User not found" });
+        if (!user.rows.length) return res.status(400).json({ message: "User not found" }); // Changed key
 
         const resetToken = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
@@ -127,20 +127,36 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
+
 // Reset Password
 exports.resetPassword = async (req, res) => {
     const { resetToken, newPassword } = req.body;
-
     try {
-        const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-        await pool.query("UPDATE users SET password_hash = $1 WHERE id = $2", [hashedPassword, decoded.id]);
-        await pool.query("DELETE FROM password_resets WHERE user_id = $1", [decoded.id]);
-
-        res.json({ message: "Password reset successful!" });
-
+      // Verify token integrity using JWT
+      const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+      console.log('Decoded reset token:', decoded);
+  
+      // Ensure the token exists in the database
+      const tokenQuery = await pool.query(
+        "SELECT * FROM password_resets WHERE reset_token = $1 AND user_id = $2",
+        [resetToken, decoded.id]
+      );
+      if (!tokenQuery.rows.length) {
+        console.log('Token not found or expired in database');
+        return res.status(400).json({ message: "Invalid or expired reset token" });
+      }
+  
+      // Hash the new password and update the user record
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await pool.query("UPDATE users SET password_hash = $1 WHERE id = $2", [hashedPassword, decoded.id]);
+  
+      // Delete the token so it cannot be reused
+      await pool.query("DELETE FROM password_resets WHERE user_id = $1", [decoded.id]);
+  
+      res.json({ message: "Password reset successful!" });
     } catch (error) {
-        res.status(500).json({ message: "Error resetting password", error });
+      console.error('Error in resetPassword:', error);
+      res.status(500).json({ message: "Error resetting password", error });
     }
-};
+  };
+  
