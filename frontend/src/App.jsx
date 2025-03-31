@@ -24,6 +24,9 @@ import TeamManagement from './pages/team/TeamManagement';
 import EmailGroupListPage from './pages/email/EmailGroupListPage';
 import ManageEmailGroupMembers from './pages/email/ManageEmailGroupMembers';
 import ManageEmail from './pages/email/ManageEmail';
+import RoleBasedRoute from './components/common/RoleBasedRoute';
+import AdminFeedbackPage from './pages/feedback/AdminFeedbackPage';
+import FeedbackUserPage from './pages/feedback/FeedbackUserPage';
   function App() {
     return (
       <Router>
@@ -117,6 +120,15 @@ import ManageEmail from './pages/email/ManageEmail';
   }
 />
 <Route
+  path="/admin/feedback"
+  element={
+    <AdminProtectedRoute>
+      <AdminFeedbackPage/>
+    </AdminProtectedRoute>
+  }
+/>
+
+<Route
   path="/email-groups"
   element={
     <AdminProtectedRoute>
@@ -138,6 +150,18 @@ import ManageEmail from './pages/email/ManageEmail';
     <AdminProtectedRoute>
       <ManageEmail />
     </AdminProtectedRoute>
+  }
+/>
+
+
+<Route
+  path="/feedback"
+  element={
+    <PrivateRoute>
+      
+        <FeedbackUserPage />
+      
+    </PrivateRoute>
   }
 />
 

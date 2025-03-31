@@ -35,10 +35,9 @@ const Home = () => {
               <li>
                 <Link to="/usermanagement">Manage Users</Link>
               </li>
-              {/* 
-                If you want to include a direct link for team details, note that it requires a team ID.
-                You might have a separate flow for that.
-              */}
+              <li>
+                <Link to="/admin/feedback">Manage Feedback</Link>
+              </li>
             </ul>
           </div>
         </>
@@ -46,6 +45,13 @@ const Home = () => {
         <>
           <p>You are logged in as a <strong>Regular User</strong>.</p>
           <p>Enjoy exploring the app!</p>
+          <div className="user-dashboard">
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li>
+                <Link to="/feedback">Give/View Feedback</Link>
+              </li>
+            </ul>
+          </div>
         </>
       ) : (
         <p>Please log in to access personalized features.</p>
