@@ -89,19 +89,19 @@ exports.editScheduledFeedback = async (req, res) => {
   
       const { team_id } = updatedSchedule.rows[0];
   
-      // ✅ Update unsent feedback entries for this team
-      await pool.query(
+      const result = await pool.query(
         "UPDATE feedback SET scheduled_at = $1 WHERE team_id = $2 AND is_sent = FALSE",
         [scheduledAtIST, team_id]
       );
-      
+  
+      console.log("Feedback entries updated:", result.rowCount);
   
       res.json({ message: "Feedback schedule updated successfully!", schedule: updatedSchedule.rows[0] });
     } catch (error) {
       res.status(500).json({ message: "Error updating feedback schedule", error: error.message });
     }
   };
-  
+   
 
 // ✅ Delete a Scheduled Feedback (Admins Only)
 exports.deleteScheduledFeedback = async (req, res) => {
@@ -127,11 +127,14 @@ exports.deleteScheduledFeedback = async (req, res) => {
 exports.getReceivedFeedback = async (req, res) => {
     try {
       const feedback = await pool.query(
-        `SELECT id, message, feedback_type, is_anonymous, is_read, is_sent, email_sent, 
-                created_at AT TIME ZONE 'Asia/Kolkata' AS created_at_ist,
-                scheduled_at AT TIME ZONE 'Asia/Kolkata' AS scheduled_at_ist
-         FROM feedback 
-         WHERE recipient_id = $1 AND scheduled_at <= NOW() AT TIME ZONE 'Asia/Kolkata'`,
+        `SELECT f.id, f.message, f.feedback_type, f.is_anonymous, f.is_read, f.is_sent, f.email_sent, 
+                f.created_at AT TIME ZONE 'Asia/Kolkata' AS created_at_ist,
+                f.scheduled_at AT TIME ZONE 'Asia/Kolkata' AS scheduled_at_ist,
+                sender.name AS sender_name,
+                sender.email AS sender_email
+         FROM feedback f
+         LEFT JOIN users sender ON f.sender_id = sender.id
+         WHERE f.recipient_id = $1 AND f.scheduled_at <= NOW() AT TIME ZONE 'Asia/Kolkata'`,
         [req.user.id]
       );
   
@@ -140,7 +143,7 @@ exports.getReceivedFeedback = async (req, res) => {
       res.status(500).json({ message: "Error fetching feedback", error: error.message });
     }
   };
-  
+    
 // ✅ Super Admin: View All Feedback (Includes Sender & Recipient Info)
 exports.getAllFeedback = async (req, res) => {
     try {
