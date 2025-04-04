@@ -41,23 +41,37 @@ exports.giveFeedback = async (req, res) => {
 // ✅ Schedule Feedback for a Team (Admins Only) — One-Time Only
 exports.scheduleFeedback = async (req, res) => {
     const { teamId, schedule_type, scheduled_at } = req.body;
-
+  
     try {
-        const scheduledAtIST = moment.tz(scheduled_at, "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-
-        const schedule = await pool.query(
-            `INSERT INTO feedback_schedule (
-                team_id, scheduled_by, schedule_type, scheduled_at, created_at
-            ) VALUES ($1, $2, $3, $4, NOW()) RETURNING *`,
-            [teamId, req.user.id, schedule_type, scheduledAtIST]
+      // ✅ Convert to IST timezone
+      const scheduledAtIST = moment.tz(scheduled_at, "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+  
+      // ✅ Only allow one one-time schedule per team
+      if (schedule_type === "specific_date") {
+        const exists = await pool.query(
+          "SELECT id FROM feedback_schedule WHERE team_id = $1 AND schedule_type = 'specific_date'",
+          [teamId]
         );
-
-        res.status(201).json({ message: "Feedback schedule created successfully!", schedule: schedule.rows[0] });
+  
+        if (exists.rows.length > 0) {
+          return res.status(400).json({ message: "❌ A one-time schedule already exists for this team." });
+        }
+      }
+  
+      // ✅ Insert schedule
+      const schedule = await pool.query(
+        `INSERT INTO feedback_schedule (
+          team_id, scheduled_by, schedule_type, scheduled_at, created_at
+        ) VALUES ($1, $2, $3, $4, NOW()) RETURNING *`,
+        [teamId, req.user.id, schedule_type, scheduledAtIST]
+      );
+  
+      res.status(201).json({ message: "✅ Feedback schedule created successfully!", schedule: schedule.rows[0] });
     } catch (error) {
-        res.status(500).json({ message: "Error scheduling feedback", error: error.message });
+      console.error("Error scheduling feedback:", error.message);
+      res.status(500).json({ message: "❌ Error scheduling feedback", error: error.message });
     }
-};
-
+  };
 // ✅ View Scheduled Feedback (Admins Only)
 exports.getScheduledFeedback = async (req, res) => {
     try {

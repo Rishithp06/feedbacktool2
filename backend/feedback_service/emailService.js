@@ -33,7 +33,7 @@ const sendFeedbackEmail = async (feedback) => {
         const createdTimeIST = moment(feedback.created_at).tz("Asia/Kolkata").format("LLLL");
 
         // ✅ Construct Email Content
-        let subject = feedback.feedback_type === "positive" ? "🌟 Positive Feedback Received!" : "🔧 Improvement Feedback for You!";
+        let subject = feedback.feedback_type === "positive" ? " Positive Feedback Received!" : " Improvement Feedback for You!";
         let senderInfo = feedback.is_anonymous ? "Anonymous" : "A Team Member";
 
         let body = `
@@ -41,10 +41,10 @@ const sendFeedbackEmail = async (feedback) => {
                 <h2 style="color: #4CAF50;">${subject}</h2>
                 <p style="font-size: 16px;">${feedback.message}</p>
                 <hr>
-                <p><strong>👤 Sender:</strong> ${senderInfo}</p>
-                <p><strong>🏢 Team:</strong> ${team_name}</p>
-                <p>📅 <strong>Created At (IST):</strong> ${createdTimeIST}</p>
-                <p>📬 <strong>Scheduled Delivery (IST):</strong> ${scheduledTimeIST}</p>
+                <p><strong> Sender:</strong> ${senderInfo}</p>
+                <p><strong> Team:</strong> ${team_name}</p>
+                <p> <strong>Created At (IST):</strong> ${createdTimeIST}</p>
+                <p> <strong>Scheduled Delivery (IST):</strong> ${scheduledTimeIST}</p>
                 <hr>
                 <p style="color: #777;">You can view more feedback in your dashboard.</p>
             </div>
@@ -58,9 +58,9 @@ const sendFeedbackEmail = async (feedback) => {
             html: body,
         });
 
-        console.log(`📧 Feedback email sent to ${recipientEmail} at ${moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")} (IST)`);
+        console.log(` Feedback email sent to ${recipientEmail} at ${moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")} (IST)`);
     } catch (error) {
-        console.error("❌ Error sending feedback email:", error.message);
+        console.error(" Error sending feedback email:", error.message);
     }
 };
 

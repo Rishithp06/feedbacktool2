@@ -1,93 +1,78 @@
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-  }
-  
-  .spinner {
-    border: 4px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 4px solid #3498db;
-    width: 40px;
-    height: 40px;
-    animation: spin 2s linear infinite;
-  }
-  /* src/styles/main.css */
-
-/* Global Styles */
+/* General styles */
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+.home-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-banner {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.welcome-banner h1 {
+  font-size: 2.5rem;
+  color: #4CAF50;
+}
+
+/* Role-specific styles */
+.role-text {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+/* Dashboard styles */
+.dashboard {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   background-color: #f9f9f9;
 }
 
-main {
-  padding: 2rem;
+.admin-dashboard {
+  border-left: 5px solid #4CAF50;
 }
 
-/* Header Styles */
-header {
-  background-color: #333;
-  color: #fff;
-  padding: 1rem;
+.user-dashboard {
+  border-left: 5px solid #2196F3;
 }
 
-header nav ul {
-  display: flex;
-  gap: 1rem;
+.dashboard-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* Footer Styles */
-footer {
-  background-color: #333;
-  color: #fff;
-  padding: 1rem;
+.dashboard-list li {
+  margin: 10px 0;
+}
+
+.dashboard-link {
+  text-decoration: none;
+  color: #4CAF50;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.dashboard-link:hover {
+  color: #388E3C;
+}
+
+/* Login prompt */
+.login-prompt {
   text-align: center;
-}
-
-/* Spinner Styles */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
-
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 4px solid #3498db;
-  width: 40px;
-  height: 40px;
-  animation: spin 2s linear infinite;
-}
-
-/* Form Styles */
-form > div {
-  margin-bottom: 1rem;
-}
-
-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-form input {
-  width: 100%;
-  padding: 0.5rem;
-  box-sizing: border-box;
+  font-size: 1.1rem;
+  color: #888;
 }

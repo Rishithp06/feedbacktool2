@@ -27,6 +27,7 @@ import ManageEmail from './pages/email/ManageEmail';
 import RoleBasedRoute from './components/common/RoleBasedRoute';
 import AdminFeedbackPage from './pages/feedback/AdminFeedbackPage';
 import FeedbackUserPage from './pages/feedback/FeedbackUserPage';
+import SchedulePeriodicFeedbackPage from './pages/feedback/SchedulePeriodicFeedbackPage';
   function App() {
     return (
       <Router>
@@ -85,6 +86,15 @@ import FeedbackUserPage from './pages/feedback/FeedbackUserPage';
     </AdminProtectedRoute>
   }
 />
+<Route
+  path="/admin/feedback/schedule-periodic"
+  element={
+    
+      
+    <AdminProtectedRoute><SchedulePeriodicFeedbackPage /></AdminProtectedRoute>
+  }
+/>
+
 
 <Route
   path="/team/create"

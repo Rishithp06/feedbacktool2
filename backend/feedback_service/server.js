@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const pool = require("./db");
 const feedbackRoutes = require("./feedbackRoutes");
 const { processScheduledFeedback } = require("./cronJobs");
+const {processPeriodicFeedback}=require("./periodicCron");
+const periodicRoutes = require("./periodicRoutes");
 
 // ✅ Load environment variables
 dotenv.config();
@@ -22,6 +24,8 @@ app.get("/", (req, res) => {
 
 // ✅ Load Feedback Routes
 app.use("/feedback", feedbackRoutes);
+app.use("/feedback-periodic", periodicRoutes);
+
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5003;
@@ -36,6 +40,8 @@ app.listen(PORT, async () => {
         // ✅ Run Cron Jobs to Process Scheduled Feedback
         console.log("🔄 Initializing Scheduled Feedback Processing...");
         processScheduledFeedback();
+        processPeriodicFeedback(); // Initial run
+
     } catch (error) {
         console.error("❌ Database Connection Error:", error.message);
     }

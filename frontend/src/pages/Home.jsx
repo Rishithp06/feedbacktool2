@@ -18,43 +18,43 @@ const Home = () => {
   }
 
   return (
-    <div className="home">
-      <h1>Welcome to My App!</h1>
+    <div className="home-container">
+      <div className="welcome-banner">
+        <h1>Welcome to My App!</h1>
+      </div>
       {role === 'admin' || role === 'super_admin' ? (
-        <>
-          <p>You are logged in as an <strong>Admin</strong>.</p>
+        <div className="dashboard admin-dashboard">
+          <p className="role-text">You are logged in as an <strong>Admin</strong>.</p>
           <p>Access administrative features below:</p>
-          <div className="admin-dashboard">
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li>
-                <Link to="/email-management">Manage Email Groups</Link>
-              </li>
-              <li>
-                <Link to="/team-management">Manage Teams</Link>
-              </li>
-              <li>
-                <Link to="/usermanagement">Manage Users</Link>
-              </li>
-              <li>
-                <Link to="/admin/feedback">Manage Feedback</Link>
-              </li>
-            </ul>
-          </div>
-        </>
+          <ul className="dashboard-list">
+            <li>
+              <Link to="/email-management" className="dashboard-link">Manage Email Groups</Link>
+            </li>
+            <li>
+              <Link to="/team-management" className="dashboard-link">Manage Teams</Link>
+            </li>
+            <li>
+              <Link to="/usermanagement" className="dashboard-link">Manage Users</Link>
+            </li>
+            <li>
+              <Link to="/admin/feedback" className="dashboard-link">Manage Feedback</Link>
+            </li>
+          </ul>
+        </div>
       ) : role ? (
-        <>
-          <p>You are logged in as a <strong>Regular User</strong>.</p>
+        <div className="dashboard user-dashboard">
+          <p className="role-text">You are logged in as a <strong>Regular User</strong>.</p>
           <p>Enjoy exploring the app!</p>
-          <div className="user-dashboard">
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li>
-                <Link to="/feedback">Give/View Feedback</Link>
-              </li>
-            </ul>
-          </div>
-        </>
+          <ul className="dashboard-list">
+            <li>
+              <Link to="/feedback" className="dashboard-link">Give/View Feedback</Link>
+            </li>
+          </ul>
+        </div>
       ) : (
-        <p>Please log in to access personalized features.</p>
+        <div className="login-prompt">
+          <p>Please log in to access personalized features.</p>
+        </div>
       )}
     </div>
   );
