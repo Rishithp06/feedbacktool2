@@ -1,8 +1,9 @@
-// src/pages/Login.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
-import '../styles/main.css'
+import Header from '../components/common/Header'; // Import the Header component
+import '../styles/login.css'; // Import the CSS for styling
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,9 +18,8 @@ const Login = () => {
 
     try {
       const response = await login({ email, password });
-      console.log("Login successful:", response);
-      // Optionally, store the JWT token in localStorage/sessionStorage if needed:
-       localStorage.setItem('token', response.token);
+      console.log('Login successful:', response);
+      localStorage.setItem('token', response.token);
       navigate('/'); // Redirect to home or protected page
     } catch (err) {
       console.error(err);
@@ -30,33 +30,44 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)}
-            required 
-          />
+    <>
+      <Header /> {/* Add the Header component */}
+      <div className="login-page">
+        <div className="login-container">
+          <h1 className="login-title">Login</h1>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Email:</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="input-field"
+              />
+            </div>
+            <div className="form-group">
+              <label>Password:</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="input-field"
+              />
+            </div>
+            {error && <p className="error-message">{error}</p>}
+            <button type="submit" disabled={loading} className="submit-button">
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
+          <div className="login-links">
+            
+            <Link to="/forgot-password" className="link">Forgot Password?</Link>
+          </div>
         </div>
-        <div>
-          <label>Password:</label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)}
-            required 
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-    </div>
+      </div>
+    </>
   );
 };
 

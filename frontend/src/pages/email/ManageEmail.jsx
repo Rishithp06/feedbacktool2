@@ -1,24 +1,40 @@
-// src/pages/email/ManageEmail.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/main.css"; // adjust if needed
+import Header from "../../components/common/Header"; // Import the Header component
+import "../../styles/manageEmail.css"; // Import the CSS file
 
 const ManageEmail = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="email-management-container">
-            <h2>Email Group Management</h2>
+        <>
+            <Header /> {/* Add the Header component */}
+            <div className="email-management-container">
+                <h2>Email Group Management</h2>
 
-            <div className="button-group">
-                <button onClick={() => navigate("/email-groups")}>📋 View All Email Groups</button>
-                <button onClick={() => navigate("/email-groups/create")}>➕ Create New Email Group</button>
-                <button onClick={() => navigate("/email-groups/manage/:groupName")}>
-                    👥 Manage Members
-                </button>
-                <button onClick={() => navigate("/")}>🏠 Back to Dashboard</button>
+                <div className="card-group">
+                    <div className="card" onClick={() => navigate("/email-groups")}>
+                        <div className="card-icon">📋</div>
+                        <div className="card-title">View All Email Groups</div>
+                    </div>
+
+                    <div className="card" onClick={() => navigate("/email-groups/create")}>
+                        <div className="card-icon">➕</div>
+                        <div className="card-title">Create New Email Group</div>
+                    </div>
+
+                    <div className="card" onClick={() => navigate("/email-groups/manage/:groupName")}>
+                        <div className="card-icon">👥</div>
+                        <div className="card-title">Manage Members</div>
+                    </div>
+
+                    <div className="card" onClick={() => navigate("/")}>
+                        <div className="card-icon">🏠</div>
+                        <div className="card-title">Back to Dashboard</div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

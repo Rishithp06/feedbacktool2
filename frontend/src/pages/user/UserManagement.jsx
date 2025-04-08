@@ -1,7 +1,7 @@
 // src/pages/user/UserManagementPage.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/main.css"; // optional if you're using a global stylesheet
+
 
 const UserManagementPage = () => {
     const navigate = useNavigate();

@@ -14,10 +14,17 @@ const generateToken = (user) => {
 };
 
 // Register Regular User
+// Register Regular User
 exports.registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        // Check if the email already exists
+        const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ message: "User already exists" });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
@@ -36,6 +43,12 @@ exports.registerAdmin = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        // Check if the email already exists
+        const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ message: "Admin already exists" });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
@@ -54,6 +67,12 @@ exports.registerSuperAdmin = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        // Check if the email already exists
+        const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ message: "Super Admin already exists" });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
@@ -66,7 +85,6 @@ exports.registerSuperAdmin = async (req, res) => {
         res.status(500).json({ message: "Error registering Super Admin", error });
     }
 };
-
 // Login
 exports.login = async (req, res) => {
     const { email, password } = req.body;

@@ -1,7 +1,8 @@
-// src/pages/email/EmailGroupListPage.jsx
 import React, { useEffect, useState } from "react";
 import EmailGroupService from "../../services/EmailGroupService";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/common/Header"; // Import the Header component
+import "../../styles/emailGroupList.css"; // Import the CSS file
 
 const EmailGroupListPage = () => {
     const [groups, setGroups] = useState([]);
@@ -40,39 +41,50 @@ const EmailGroupListPage = () => {
     };
 
     return (
-        <div className="container">
-            <h2>Email Groups</h2>
+        <>
+            <Header /> {/* Add the Header component */}
+            <div className="email-group-list-container">
+                <h2>Email Groups</h2>
 
-            {message && <p style={{ color: "green" }}>{message}</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+                {/* Success and Error Messages */}
+                {message && <p className="success-message">{message}</p>}
+                {error && <p className="error-message">{error}</p>}
 
-            <button onClick={() => navigate("/email-groups/create")}>
-                ➕ Create New Group
-            </button>
+                {/* Create New Group Button */}
+                <button className="create-group-button" onClick={() => navigate("/email-groups/create")}>
+                    ➕ Create New Group
+                </button>
 
-            {groups.length === 0 ? (
-                <p>No email groups found.</p>
-            ) : (
-                <ul style={{ marginTop: "1rem" }}>
-                    {groups.map((group) => (
-                        <li key={group.id} style={{ marginBottom: "1rem" }}>
-                            <strong>{group.name}</strong> (ID: {group.id})
-                            <div style={{ marginTop: "0.5rem" }}>
-                                <button onClick={() => navigate(`/email-groups/manage/${group.name}`)}>
-                                    👥 Manage Members
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(group.id)}
-                                    style={{ marginLeft: "1rem", backgroundColor: "#f44336", color: "white" }}
-                                >
-                                    🗑️ Delete Group
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+                {/* Email Groups List */}
+                {groups.length === 0 ? (
+                    <p className="no-groups-message">No email groups found.</p>
+                ) : (
+                    <ul className="email-group-list">
+                        {groups.map((group) => (
+                            <li key={group.id} className="email-group-item">
+                                <div className="group-info">
+                                    <strong>{group.name}</strong> <span>(ID: {group.id})</span>
+                                </div>
+                                <div className="group-actions">
+                                    <button
+                                        className="manage-button"
+                                        onClick={() => navigate(`/email-groups/manage/${group.name}`)}
+                                    >
+                                        👥 Manage Members
+                                    </button>
+                                    <button
+                                        className="delete-button"
+                                        onClick={() => handleDelete(group.id)}
+                                    >
+                                        🗑️ Delete Group
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </>
     );
 };
 

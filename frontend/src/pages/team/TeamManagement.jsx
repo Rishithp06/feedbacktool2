@@ -1,7 +1,7 @@
 // src/pages/team/TeamManagement.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/main.css"; // adjust if you're using another global style file
+
 
 const TeamManagement = () => {
     const navigate = useNavigate();

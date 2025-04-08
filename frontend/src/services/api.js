@@ -1,4 +1,3 @@
-// src/services/api.js
 import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001/auth";
@@ -10,40 +9,73 @@ const api = axios.create({
   }
 });
 
+// Helper function to handle API errors
+const handleApiError = (error) => {
+  if (error.response && error.response.data && error.response.data.message) {
+    throw new Error(error.response.data.message); // Throw the backend error message
+  } else {
+    throw new Error("An unexpected error occurred. Please try again.");
+  }
+};
+
 // Register a regular user
 export const registerUser = async (userData) => {
-  const response = await api.post('/register/user', userData);
-  return response.data;
+  try {
+    const response = await api.post('/register/user', userData);
+    return response.data;
+  } catch (error) {
+    handleApiError(error); // Handle the error
+  }
 };
 
 // Register an admin
 export const registerAdmin = async (adminData) => {
-  const response = await api.post('/register/admin', adminData);
-  return response.data;
+  try {
+    const response = await api.post('/register/admin', adminData);
+    return response.data;
+  } catch (error) {
+    handleApiError(error); // Handle the error
+  }
 };
 
 // Register a super admin
 export const registerSuperAdmin = async (superAdminData) => {
-  const response = await api.post('/register/super-admin', superAdminData);
-  return response.data;
+  try {
+    const response = await api.post('/register/super-admin', superAdminData);
+    return response.data;
+  } catch (error) {
+    handleApiError(error); // Handle the error
+  }
 };
 
 // Login endpoint
 export const login = async (credentials) => {
-  const response = await api.post('/login', credentials);
-  return response.data;
+  try {
+    const response = await api.post('/login', credentials);
+    return response.data;
+  } catch (error) {
+    handleApiError(error); // Handle the error
+  }
 };
 
 // Forgot Password endpoint
 export const forgotPassword = async (emailData) => {
-  const response = await api.post('/forgot-password', emailData);
-  return response.data;
+  try {
+    const response = await api.post('/forgot-password', emailData);
+    return response.data;
+  } catch (error) {
+    handleApiError(error); // Handle the error
+  }
 };
 
 // Reset Password endpoint
 export const resetPassword = async (data) => {
-  const response = await api.post('/reset-password', data);
-  return response.data;
+  try {
+    const response = await api.post('/reset-password', data);
+    return response.data;
+  } catch (error) {
+    handleApiError(error); // Handle the error
+  }
 };
 
 export default api;
