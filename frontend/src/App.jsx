@@ -28,6 +28,8 @@ import FeedbackUserPage from './pages/feedback/FeedbackUserPage';
 import SchedulePeriodicFeedbackPage from './pages/feedback/SchedulePeriodicFeedbackPage';
 import GiveFeedbackPage from './pages/feedback/GiveFeedbackPage';
 import CheckFeedbackPage from './pages/feedback/CheckFeedbackPage';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
+import SuperProtectedRoute from './components/common/SuperProtectedRoute';
 function App() {
   return (
     <Router>
@@ -220,6 +222,18 @@ function App() {
                   
                 </>
               </PrivateRoute>
+            }
+          />
+
+<Route
+            path="/feedback-super"
+            element={
+              <SuperProtectedRoute>
+                <>
+                  <SuperAdminDashboard />
+                  
+                </>
+               </SuperProtectedRoute> 
             }
           />
           {/* Public Routes */}

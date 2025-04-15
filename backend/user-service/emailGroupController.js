@@ -21,8 +21,15 @@ exports.createEmailGroup = async (req, res) => {
 exports.getAllEmailGroups = async (req, res) => {
     try {
         const groups = await pool.query("SELECT * FROM email_groups");
+
+        // Ensure the response is an array
+        if (!Array.isArray(groups.rows)) {
+            return res.status(500).json({ message: "Unexpected response format: Expected an array." });
+        }
+
         res.json(groups.rows);
     } catch (error) {
+        console.error("Error fetching email groups:", error.message);
         res.status(500).json({ message: "Error fetching email groups", error: error.message });
     }
 };

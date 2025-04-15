@@ -11,7 +11,12 @@ body, html {
     
     padding: 2rem;
     background: linear-gradient(to bottom, #f9f9fc, #eaeaf3); /* Subtle gradient background */
-    min-height: calc(100vh - 10vh); /* Remaining height after header */
+    /* min-height: calc(100vh - 10vh);  */
+    
+    /* Adjust for the header height */
+    height: 90vh;
+    
+    overflow: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;

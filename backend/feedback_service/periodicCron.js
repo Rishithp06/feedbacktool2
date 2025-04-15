@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const pool = require("./db");
 const { sendFeedbackEmail } = require("./emailService");
 const moment = require("moment-timezone");
+const { decryptMessage } = require("./encryption"); // Import decryption function
 
 const processPeriodicFeedback = async () => {
   try {
@@ -35,7 +36,13 @@ const processPeriodicFeedback = async () => {
         );
 
         for (const fb of feedbacks.rows) {
+          // ✅ Decrypt the feedback message
+          fb.message = decryptMessage(fb.message);
+
+          // ✅ Send the decrypted feedback via email
           await sendFeedbackEmail(fb);
+
+          // ✅ Mark the feedback as sent
           await pool.query(
             "UPDATE feedback SET is_sent = TRUE, email_sent = TRUE WHERE id = $1",
             [fb.id]

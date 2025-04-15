@@ -25,8 +25,20 @@ const EmailGroupService = {
 
     // Get all email groups
     getAllGroups: async () => {
-        const response = await fetch(`${API_BASE}/all`, getAuthHeaders());
-        return response.json();
+        try {
+            const response = await fetch(`${API_BASE}/all`, getAuthHeaders());
+            const data = await response.json();
+    
+            // Ensure the response is an array
+            if (!Array.isArray(data)) {
+                throw new Error("Unexpected response format: Expected an array.");
+            }
+    
+            return data;
+        } catch (error) {
+            console.error("Error fetching email groups:", error.message);
+            return []; // Return an empty array as a fallback
+        }
     },
 
     // Add a user to a group by group name and user ID

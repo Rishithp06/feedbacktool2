@@ -1,5 +1,5 @@
 // src/services/FeedbackService.js
-
+import axios from "axios";
 const API_BASE = process.env.REACT_APP_FEEDBACK_SERVICE_URL || "http://localhost:5003/feedback";
 
 const getAuthHeaders = () => {
@@ -15,6 +15,7 @@ const getAuthHeaders = () => {
 const FeedbackService = {
     // Submit feedback
     giveFeedback: async (data) => {
+        data.message = data.message.trim(); // ✨ extra safety on frontend
         const response = await fetch(`${API_BASE}/give`, {
             method: "POST",
             ...getAuthHeaders(),
@@ -22,6 +23,7 @@ const FeedbackService = {
         });
         return response.json();
     },
+    
 
     // Get received feedback
     getReceivedFeedback: async () => {
@@ -75,9 +77,16 @@ const FeedbackService = {
 
     // Super Admin only: Get all feedback
     getAllFeedback: async () => {
-        const response = await fetch(`${API_BASE}/all`, getAuthHeaders());
-        return response.json();
+        const token = localStorage.getItem("token");
+        if (!token) {
+            throw new Error("No token found. Please log in.");
+        }
+        const res = await axios.get(`${API_BASE}/all`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data.feedback;
     },
+    
 };
 
 export default FeedbackService;

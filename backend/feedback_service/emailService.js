@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const pool = require("./db");
 const moment = require("moment-timezone");
+const { decryptMessage } = require("./encryption"); // Import decryption function
 require("dotenv").config();
 
 // ✅ Configure Email Transporter (Gmail SMTP)
@@ -15,7 +16,7 @@ const transporter = nodemailer.createTransport({
 // ✅ Function to Send Feedback Email
 const sendFeedbackEmail = async (feedback) => {
     try {
-        // ✅ Get Recipient's Email & Team Name (Fixed SQL Query)
+        // ✅ Get Recipient's Email & Team Name
         const recipientQuery = await pool.query(
             "SELECT users.email, teams.name AS team_name FROM users, teams WHERE users.id = $1 AND teams.id = $2",
             [feedback.recipient_id, feedback.team_id]
@@ -27,6 +28,11 @@ const sendFeedbackEmail = async (feedback) => {
         }
 
         const { email: recipientEmail, team_name } = recipientQuery.rows[0];
+
+        // ✅ Decrypt Feedback Message (Fallback, if not already decrypted)
+        if (!feedback.message.includes(":")) {
+            feedback.message = decryptMessage(feedback.message);
+        }
 
         // ✅ Convert Scheduled Time to IST
         const scheduledTimeIST = moment(feedback.scheduled_at).tz("Asia/Kolkata").format("LLLL"); // Example: Monday, March 25, 2024 10:00 AM IST
@@ -58,9 +64,9 @@ const sendFeedbackEmail = async (feedback) => {
             html: body,
         });
 
-        console.log(` Feedback email sent to ${recipientEmail} at ${moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")} (IST)`);
+        console.log(`✅ Feedback email sent to ${recipientEmail} at ${moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")} (IST)`);
     } catch (error) {
-        console.error(" Error sending feedback email:", error.message);
+        console.error(`❌ Error sending feedback email for feedback ID: ${feedback.id}`, error.message);
     }
 };
 
