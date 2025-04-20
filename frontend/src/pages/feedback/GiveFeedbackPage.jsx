@@ -79,6 +79,7 @@ const GiveFeedbackPage = () => {
   return (
     <>
       <Header /> {/* Global Header component */}
+      <div className="give-feedback-main">
       <div className="give-feedback-page">
         <h2>Give Feedback</h2>
 
@@ -172,6 +173,7 @@ const GiveFeedbackPage = () => {
 
           <button type="submit">Submit Feedback</button>
         </form>
+      </div>
       </div>
     </>
   );

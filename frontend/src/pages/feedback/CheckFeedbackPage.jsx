@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import FeedbackService from "../../services/FeedbackService";
-import '../../styles/receivefeedback.css';
+import Header from "../../components/common/Header"; // Import the Header component
+import "../../styles/receivefeedback.css";
+
 const CheckFeedbackPage = () => {
   const [feedbacks, setFeedbacks] = useState([]);
+  const [selected, setSelected] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -11,7 +14,6 @@ const CheckFeedbackPage = () => {
         const fb = await FeedbackService.getReceivedFeedback();
         setFeedbacks(Array.isArray(fb) ? fb : []);
       } catch (err) {
-        console.error("Error loading feedbacks", err);
         setError("Error loading feedbacks. Check your connection.");
       }
     };
@@ -23,41 +25,63 @@ const CheckFeedbackPage = () => {
       await FeedbackService.markAsRead(id);
       const updated = await FeedbackService.getReceivedFeedback();
       setFeedbacks(Array.isArray(updated) ? updated : []);
+      setSelected(updated.find(f => f.id === id));
     } catch (err) {
       console.error("Error marking feedback as read", err);
     }
   };
 
   return (
-    <div className="container">
-      <h2>Received Feedback</h2>
+    <>
+      <Header /> {/* Add the Header component */}
+      <div className="feedback-page split-view">
+        {error && <p className="error-message">{error}</p>}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="left-panel">
+          <h3>📥 Feedback</h3>
+          {feedbacks.length === 0 ? (
+            <p className="no-feedback">No feedback yet.</p>
+          ) : (
+            feedbacks.map((fb) => (
+              <div
+                key={fb.id}
+                className={`feedback-item ${selected?.id === fb.id ? "active" : ""}`}
+                onClick={() => setSelected(fb)}
+              >
+                <div className="feedback-type">{fb.feedback_type.toUpperCase()}</div>
+                <div className="feedback-preview">
+                  {fb.message.slice(0, 40)}...
+                </div>
+                <div className="feedback-status">
+                  {fb.is_read ? "✅" : "❌"}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
 
-      {feedbacks.length === 0 ? (
-        <p>No feedback received yet.</p>
-      ) : (
-        <ul>
-          {feedbacks.map((fb) => (
-            <li key={fb.id} style={{ marginBottom: "1rem" }}>
-              <strong>{fb.feedback_type.toUpperCase()}</strong> — {fb.message}
-              <br />
-              Anonymous: {fb.is_anonymous ? "Yes" : "No"}
-              {!fb.is_anonymous && fb.sender_name && (
-                <span> | From: {fb.sender_name} ({fb.sender_email})</span>
+        <div className="right-panel">
+          {selected ? (
+            <div className="feedback-detail">
+              <h3>{selected.feedback_type.toUpperCase()}</h3>
+              <p className="feedback-message">{selected.message}</p>
+              <p><strong>Anonymous:</strong> {selected.is_anonymous ? "Yes" : "No"}</p>
+              {!selected.is_anonymous && selected.sender_name && (
+                <p><strong>From:</strong> {selected.sender_name} ({selected.sender_email})</p>
               )}
-              <br />
-              Read: {fb.is_read ? "✅" : "❌"}
-              {!fb.is_read && (
-                <button onClick={() => markAsRead(fb.id)} style={{ marginLeft: "1rem" }}>
+              <p><strong>Status:</strong> {selected.is_read ? "✅ Read" : "❌ Unread"}</p>
+              {!selected.is_read && (
+                <button className="read-button" onClick={() => markAsRead(selected.id)}>
                   Mark as Read
                 </button>
               )}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+            </div>
+          ) : (
+            <p className="select-instruction">Select a feedback to view details →</p>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
