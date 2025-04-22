@@ -1,6 +1,8 @@
 // src/pages/ForgotPassword.jsx
 import React, { useState } from 'react';
 import { forgotPassword } from '../services/api';
+import Header from '../components/common/Header';
+import '../styles/forgotpassword.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -25,25 +27,31 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password">
-      <h1>Forgot Password</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)}
-            required 
-          />
+    <>
+      <Header />
+      <div className="forgot-password-wrapper">
+        <div className="forgot-password-card">
+          <h2>Forgot Password</h2>
+          <form onSubmit={handleSubmit}>
+            <label>Email Address</label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
+            {error && <p className="error-msg">{error}</p>}
+            {message && <p className="success-msg">{message}</p>}
+
+            <button type="submit" disabled={loading}>
+              {loading ? 'Sending...' : 'Send Reset Email'}
+            </button>
+          </form>
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {message && <p style={{ color: 'green' }}>{message}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Sending...' : 'Send Reset Email'}
-        </button>
-      </form>
-    </div>
+      </div>
+    </>
   );
 };
 

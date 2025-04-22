@@ -1,66 +1,91 @@
-/* Container Styling */
-.container {
-    margin: 20px auto;
-    max-width: 1200px;
-    padding: 20px;
-    border: 1px solid #ddd;
+.superadmin-dashboard {
+    height: 90vh;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    padding: 2rem 1rem;
+    color: white;
+    overflow: scroll;
+  }
+  
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: -webkit-linear-gradient(#ffffff, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .subtitle {
+    color: #e0e7ff;
+    font-weight: 300;
+  }
+  
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .filters label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .filters select {
+    padding: 0.5rem 1rem;
     border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.container h2 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.container p {
-    font-size: 16px;
-    color: #555;
-}
-
-/* Table Styling */
-table {
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    background-color: #e0e7ff;
+    color: #1e1b4b;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1rem;
+    backdrop-filter: blur(8px);
+  }
+  
+  .feedback-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    font-family: Arial, sans-serif;
-}
-
-table th,
-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-
-table th {
-    background-color: #4CAF50;
     color: white;
+    font-size: 0.95rem;
+  }
+  
+  .feedback-table thead {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .feedback-table th,
+  .feedback-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: left;
+  }
+  
+  .feedback-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background 0.2s ease;
+  }
+  
+  .loading-text,
+  .error-text,
+  .empty-text {
+    text-align: center;
+    font-size: 1.1rem;
     font-weight: bold;
-}
-
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-table tr:hover {
-    background-color: #ddd;
-}
-
-table td {
-    font-size: 14px;
-    color: #333;
-}
-
-/* Loading and Error Messages */
-p {
-    font-size: 16px;
-    color: #333;
-}
-
-p[style*="color: red"] {
-    color: red;
-    font-weight: bold;
-}
+    margin-top: 2rem;
+    color: white;
+  }
+  

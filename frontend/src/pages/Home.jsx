@@ -40,7 +40,7 @@ const Home = () => {
             <h3>Manage Users</h3>
             <p>Control user access and permissions.</p>
           </Link>
-          <Link to="/admin/feedback" className="dashboard-card">
+          <Link to="/admin/feedback-home" className="dashboard-card">
             <h3>Manage Feedback</h3>
             <p>Review and manage feedback submissions.</p>
           </Link>

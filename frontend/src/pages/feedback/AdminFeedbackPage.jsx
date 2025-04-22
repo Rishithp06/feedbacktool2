@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import FeedbackService from "../../services/FeedbackService";
 import TeamService from "../../services/TeamService";
-import FeedbackUserPage from "./FeedbackUserPage";
+import Header from "../../components/common/Header";
+import "../../styles/adminfeedback.css";
 
 const AdminFeedbackPage = () => {
   const [teams, setTeams] = useState([]);
@@ -64,62 +65,60 @@ const AdminFeedbackPage = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Admin Feedback Management</h2>
+    <>
+      <Header />
+      <div className="admin-feedback-main">
+        <div className="admin-feedback-card">
+          <h2>Admin Feedback Management</h2>
 
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          {message && <p className="success-msg">{message}</p>}
+          {error && <p className="error-msg">{error}</p>}
 
-      <section style={{ marginBottom: "2rem" }}>
-        <h3>{editId ? "Edit Schedule" : "Schedule Feedback Delivery"}</h3>
-        <form onSubmit={handleSubmit}>
-          <label>Team:</label>
-          <select name="teamId" value={form.teamId} onChange={handleChange} required>
-            <option value="">-- Select Team --</option>
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>{team.name}</option>
-            ))}
-          </select>
+          <section>
+            <h3>{editId ? "Edit Feedback Schedule" : "Schedule Feedback Delivery"}</h3>
+            <form onSubmit={handleSubmit}>
+              <label>Team:</label>
+              <select name="teamId" value={form.teamId} onChange={handleChange} required>
+                <option value="">-- Select Team --</option>
+                {teams.map((team) => (
+                  <option key={team.id} value={team.id}>{team.name}</option>
+                ))}
+              </select>
 
-          <label>Scheduled At:</label>
-          <input
-            type="datetime-local"
-            name="scheduled_at"
-            value={form.scheduled_at}
-            onChange={handleChange}
-            required
-          />
+              <label>Scheduled At:</label>
+              <input
+                type="datetime-local"
+                name="scheduled_at"
+                value={form.scheduled_at}
+                onChange={handleChange}
+                required
+              />
 
-          <button type="submit">{editId ? "Update" : "Schedule"}</button>
-        </form>
-      </section>
+              <button type="submit">{editId ? "Update Schedule" : "Schedule Now"}</button>
+            </form>
+          </section>
 
-      <section style={{ marginBottom: "2rem" }}>
-        <h3>Scheduled Feedback List</h3>
-        {scheduled.length === 0 ? (
-          <p>No scheduled feedback found.</p>
-        ) : (
-          <ul>
-            {scheduled.map((item) => (
-              <li key={item.id}>
-                🏢 <strong>{item.team_id}</strong> — 📅 {item.scheduled_at_ist}
-                <br />
-                <button onClick={() => handleEdit(item)}>✏️ Edit</button>
-                <button onClick={() => handleDelete(item.id)} style={{ marginLeft: "0.5rem" }}>
-                  ❌ Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <hr />
-      <section>
-        <h3>Give Feedback</h3>
-        <FeedbackUserPage />
-      </section>
-    </div>
+          <section>
+            <h3>Scheduled Feedback List</h3>
+            {scheduled.length === 0 ? (
+              <p>No scheduled feedback found.</p>
+            ) : (
+              <ul className="schedule-list">
+                {scheduled.map((item) => (
+                  <li key={item.id}>
+                    🏢 <strong>{item.team_id}</strong> — 📅 {item.scheduled_at_ist}
+                    <div className="schedule-actions">
+                      <button onClick={() => handleEdit(item)}>✏️ Edit</button>
+                      <button onClick={() => handleDelete(item.id)}>❌ Delete</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+      </div>
+    </>
   );
 };
 

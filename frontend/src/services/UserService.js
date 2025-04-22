@@ -24,7 +24,7 @@ const UserService = {
         return response.json();
     },
 
-    // Update user (user or admin updating someone)
+    // Update user (self or others based on role) — now includes role update
     updateUser: async (id, data) => {
         const url = id ? `${API_BASE}/update/${id}` : `${API_BASE}/update`;
         const response = await fetch(url, {

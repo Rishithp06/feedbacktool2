@@ -63,7 +63,7 @@ const EmailGroupListPage = () => {
                         {groups.map((group) => (
                             <li key={group.id} className="email-group-item">
                                 <div className="group-info">
-                                    <strong>{group.name}</strong> <span>(ID: {group.id})</span>
+                                    <strong>{group.name}</strong> <span></span>
                                 </div>
                                 <div className="group-actions">
                                     <button

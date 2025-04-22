@@ -4,6 +4,8 @@ import TeamService from "../../services/TeamService";
 import EmailGroupService from "../../services/EmailGroupService";
 import UserService from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/common/Header";
+import "../../styles/teamlistpage.css"; // Scoped styles
 
 const TeamListPage = () => {
     const [teams, setTeams] = useState([]);
@@ -17,7 +19,6 @@ const TeamListPage = () => {
     const [selectedGroup, setSelectedGroup] = useState("");
     const [emailGroups, setEmailGroups] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -134,113 +135,111 @@ const TeamListPage = () => {
     };
 
     return (
-        <div className="container">
-            <h2>All Teams</h2>
+        <>
+            <Header />
+            <div className="team-list-main">
+                <div className="team-list-card">
+                    <h2>All Teams</h2>
 
-            {message && <p style={{ color: "green" }}>{message}</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+                    {message && <p className="success-msg">{message}</p>}
+                    {error && <p className="error-msg">{error}</p>}
 
-            <div style={{ marginBottom: "1rem" }}>
-                <input
-                    type="text"
-                    placeholder="Search teams by name..."
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    style={{ padding: "0.5rem", width: "60%" }}
-                />
-                <button onClick={() => navigate("/team/create")} style={{ marginLeft: "1rem" }}>
-                    + Create New Team
-                </button>
-            </div>
+                    <div className="team-search-bar">
+                        <input
+                            type="text"
+                            placeholder="Search teams by name..."
+                            value={searchQuery}
+                            onChange={handleSearch}
+                        />
+                        <button onClick={() => navigate("/team/create")}>
+                            + Create New Team
+                        </button>
+                    </div>
 
-            {filteredTeams.length === 0 ? (
-                <p>No teams found.</p>
-            ) : (
-                <ul>
-                    {filteredTeams.map((team) => (
-                        <li key={team.id} style={{ marginBottom: "1rem" }}>
-                            <strong>{team.name}</strong>
+                    {filteredTeams.length === 0 ? (
+                        <p>No teams found.</p>
+                    ) : (
+                        <ul className="team-list">
+                            {filteredTeams.map((team) => (
+                                <li key={team.id} className="team-item">
+                                    <div className="team-header">
+                                        <strong>{team.name}</strong>
+                                        <div className="team-actions">
+                                            <button onClick={() => handleViewMembers(team.id)}>👥 View Members</button>
+                                            <button onClick={() => handleDeleteTeam(team.id)}>🗑️ Delete Team</button>
+                                        </div>
+                                    </div>
 
-                            <div>
-                                <button onClick={() => handleViewMembers(team.id)}>👥 View Members</button>
-                                <button onClick={() => handleDeleteTeam(team.id)} style={{ marginLeft: "0.5rem" }}>
-                                    🗑️ Delete Team
-                                </button>
-                            </div>
+                                    {selectedTeamId === team.id && (
+                                        <div className="team-members">
+                                            <strong>Members:</strong>
+                                            {members.length === 0 ? (
+                                                <p>No members in this team.</p>
+                                            ) : (
+                                                <ul>
+                                                    {members.map((member) => (
+                                                        <li key={member.id}>
+                                                            {member.name} ({member.email})
+                                                            <button
+                                                                onClick={() => handleRemoveMember(member.email)}
+                                                            >
+                                                                ❌ Remove
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
 
-                            {selectedTeamId === team.id && (
-                                <div style={{ marginTop: "0.5rem" }}>
-                                    <strong>Members:</strong>
-                                    {members.length === 0 ? (
-                                        <p>No members in this team.</p>
-                                    ) : (
-                                        <ul>
-                                            {members.map((member) => (
-                                                <li key={member.id}>
-                                                    {member.name} ({member.email})
-                                                    <button
-                                                        style={{ marginLeft: "1rem" }}
-                                                        onClick={() => handleRemoveMember(member.email)}
-                                                    >
-                                                        ❌ Remove
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                            <div className="team-add-section">
+                                                <label>Add User from List:</label>
+                                                <select
+                                                    value={selectedUserEmail}
+                                                    onChange={(e) => setSelectedUserEmail(e.target.value)}
+                                                >
+                                                    <option value="">-- Select User --</option>
+                                                    {allUsers.map((user) => (
+                                                        <option key={user.id} value={user.email}>
+                                                            {user.name} ({user.email})
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <button
+                                                    onClick={() => handleAddUser(team.id)}
+                                                    disabled={!selectedUserEmail}
+                                                >
+                                                    ➕ Add User
+                                                </button>
+                                            </div>
+
+                                            <div className="team-add-section">
+                                                <label>Add All from Email Group:</label>
+                                                <select
+                                                    value={selectedGroup}
+                                                    onChange={(e) => setSelectedGroup(e.target.value)}
+                                                >
+                                                    <option value="">-- Select Email Group --</option>
+                                                    {emailGroups.map((group) => (
+                                                        <option key={group.id} value={group.name}>
+                                                            {group.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <button
+                                                    onClick={() => handleAddGroup(team.id)}
+                                                    disabled={!selectedGroup}
+                                                >
+                                                    ➕ Add All from Group
+                                                </button>
+                                            </div>
+                                        </div>
                                     )}
-
-                                    {/* Add user from dropdown */}
-                                    <div style={{ marginTop: "1rem" }}>
-                                        <label>Add User from List:</label>
-                                        <select
-                                            value={selectedUserEmail}
-                                            onChange={(e) => setSelectedUserEmail(e.target.value)}
-                                        >
-                                            <option value="">-- Select User --</option>
-                                            {allUsers.map((user) => (
-                                                <option key={user.id} value={user.email}>
-                                                    {user.name} ({user.email})
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <button
-                                            onClick={() => handleAddUser(team.id)}
-                                            disabled={!selectedUserEmail}
-                                            style={{ marginLeft: "0.5rem" }}
-                                        >
-                                            ➕ Add User
-                                        </button>
-                                    </div>
-
-                                    {/* Add group members */}
-                                    <div style={{ marginTop: "1rem" }}>
-                                        <label>Add All from Email Group:</label>
-                                        <select
-                                            value={selectedGroup}
-                                            onChange={(e) => setSelectedGroup(e.target.value)}
-                                        >
-                                            <option value="">-- Select Email Group --</option>
-                                            {emailGroups.map((group) => (
-                                                <option key={group.id} value={group.name}>
-                                                    {group.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <button
-                                            onClick={() => handleAddGroup(team.id)}
-                                            disabled={!selectedGroup}
-                                            style={{ marginLeft: "0.5rem" }}
-                                        >
-                                            ➕ Add All from Group
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            </div>
+        </>
     );
 };
 

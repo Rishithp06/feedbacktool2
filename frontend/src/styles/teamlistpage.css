@@ -1,0 +1,131 @@
+.team-list-main {
+    height: 90vh;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    padding: 3rem 1rem;
+    overflow-y: auto;
+  }
+  
+  .team-list-card {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .success-msg {
+    color: green;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+  
+  .error-msg {
+    color: red;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+  
+  .team-search-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .team-search-bar input {
+    flex: 1;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  .team-search-bar button {
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .team-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .team-item {
+    background: #f9f9ff;
+    border-left: 4px solid #4f46e5;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+  }
+  
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .team-actions button {
+    margin-left: 0.5rem;
+    background: none;
+    color: #4f46e5;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .team-members {
+    margin-top: 1rem;
+  }
+  
+  .team-members ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .team-members li {
+    margin-bottom: 0.6rem;
+  }
+  
+  .team-members button {
+    background: none;
+    color: #e11d48;
+    border: none;
+    font-weight: bold;
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+  
+  .team-add-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  
+  .team-add-section select,
+  .team-add-section button {
+    max-width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+  
+  .team-add-section button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  

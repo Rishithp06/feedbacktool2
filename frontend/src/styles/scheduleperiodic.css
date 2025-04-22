@@ -1,0 +1,109 @@
+/* Outer card */
+/* To ensure scroll and background stays nice */
+.periodic-feedback-main {
+    height: 90vh;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    padding: 3rem 1rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+  
+.periodic-feedback-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    width: 100%;
+    margin: 2rem auto;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+  }
+  
+  /* Heading */
+  .periodic-feedback-card h2 {
+    color: #4f46e5;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Form structure */
+  .periodic-feedback-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  
+  /* Labels */
+  .periodic-feedback-card label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Inputs */
+  .periodic-feedback-card select,
+  .periodic-feedback-card input[type="time"] {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .periodic-feedback-card select:focus,
+  .periodic-feedback-card input[type="time"]:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  }
+  
+  /* Submit button */
+  .periodic-feedback-card button {
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+    width: fit-content;
+  }
+  
+  .periodic-feedback-card button:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #4338ca, #7e22ce);
+  }
+  
+  /* Feedback messages */
+  .success-msg {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .error-msg {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .periodic-feedback-card {
+      padding: 1.5rem;
+    }
+  
+    .periodic-feedback-card button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  

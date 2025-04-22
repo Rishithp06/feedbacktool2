@@ -1,0 +1,96 @@
+/* Background wrapper with gradient and space for header */
+.create-group-main {
+  min-height: 90vh; /* Leaves 10vh for the Header */
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 3rem 1rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* White card */
+.create-group-card {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Heading */
+.create-group-card h2 {
+  text-align: center;
+  color: #4f46e5;
+  margin-bottom: 1.5rem;
+}
+
+/* Messages */
+.success-msg {
+  color: green;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.error-msg {
+  color: red;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+/* Form layout */
+.create-group-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.create-group-card label {
+  font-weight: 600;
+  color: #333;
+}
+
+.create-group-card input[type="text"] {
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.create-group-card input:focus {
+  border-color: #4f46e5;
+}
+
+/* Submit button */
+.create-group-card button[type="submit"] {
+  background-color: #4f46e5;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.create-group-card button[type="submit"]:hover {
+  background-color: #3730a3;
+}
+
+/* Back button */
+.back-btn {
+  background: none;
+  color: #4f46e5;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  text-align: center;
+}

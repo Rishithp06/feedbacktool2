@@ -30,6 +30,7 @@ import GiveFeedbackPage from './pages/feedback/GiveFeedbackPage';
 import CheckFeedbackPage from './pages/feedback/CheckFeedbackPage';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import SuperProtectedRoute from './components/common/SuperProtectedRoute';
+import FeedbackHomePage from './pages/feedback/FeedbackHome';
 function App() {
   return (
     <Router>
@@ -100,17 +101,7 @@ function App() {
               </AdminProtectedRoute>
             }
           />
-          <Route
-            path="/admin/feedback/schedule-periodic"
-            element={
-              <AdminProtectedRoute>
-                <>
-                 
-                  <SchedulePeriodicFeedbackPage />
-                </>
-              </AdminProtectedRoute>
-            }
-          />
+          
           <Route
             path="/team/create"
             element={
@@ -162,6 +153,30 @@ function App() {
                 <>
                  
                   <AdminFeedbackPage />
+                </>
+              </AdminProtectedRoute>
+            }
+          />
+
+
+<Route
+            path="/admin/feedback-home"
+            element={
+              <AdminProtectedRoute>
+                <>
+                 
+                  <FeedbackHomePage/>
+                </>
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/feedback/schedule-periodic"
+            element={
+              <AdminProtectedRoute>
+                <>
+                 
+                  <SchedulePeriodicFeedbackPage />
                 </>
               </AdminProtectedRoute>
             }

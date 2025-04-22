@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import EmailGroupService from "../../services/EmailGroupService";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/common/Header"; // ✅ Include the header
+import "../../styles/createemailgroup.css"; // ✅ Scoped CSS
 
 const CreateEmailGroupPage = () => {
     const [groupName, setGroupName] = useState("");
@@ -14,41 +16,46 @@ const CreateEmailGroupPage = () => {
         setMessage(null);
         setError(null);
 
-        const res = await EmailGroupService.createGroup(groupName);
-
-        if (res.message?.includes("success")) {
-            setMessage(res.message);
-            setGroupName("");
-        } else {
-            setError(res.message || "Failed to create email group.");
+        try {
+            const res = await EmailGroupService.createGroup(groupName);
+            if (res.message?.includes("success")) {
+                setMessage(res.message);
+                setGroupName("");
+            } else {
+                setError(res.message || "Failed to create email group.");
+            }
+        } catch {
+            setError("Error creating email group.");
         }
     };
 
     return (
-        <div className="container">
-            <h2>Create Email Group</h2>
+        <>
+            <Header />
+            <div className="create-group-main">
+                <div className="create-group-card">
+                    <h2>Create Email Group</h2>
 
-            {message && <p style={{ color: "green" }}>{message}</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+                    {message && <p className="success-msg">{message}</p>}
+                    {error && <p className="error-msg">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <label>Group Name:</label>
-                <input
-                    type="text"
-                    value={groupName}
-                    onChange={(e) => setGroupName(e.target.value)}
-                    required
-                />
+                    <form onSubmit={handleSubmit}>
+                        <label>Group Name:</label>
+                        <input
+                            type="text"
+                            value={groupName}
+                            onChange={(e) => setGroupName(e.target.value)}
+                            required
+                        />
+                        <button type="submit">Create Group</button>
+                    </form>
 
-                <button type="submit" style={{ marginTop: "1rem" }}>
-                    Create Group
-                </button>
-            </form>
-
-            <button onClick={() => navigate("/email-groups")} style={{ marginTop: "1rem" }}>
-                ← Back to Group List
-            </button>
-        </div>
+                    <button className="back-btn" onClick={() => navigate("/email-groups")}>
+                        ← Back to Group List
+                    </button>
+                </div>
+            </div>
+        </>
     );
 };
 

@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import EmailGroupService from "../../services/EmailGroupService";
 import UserService from "../../services/UserService";
+import Header from "../../components/common/Header"; // ✅ Import the global header
+import "../../styles/manageemailgroup.css"; // ✅ Scoped styles
 
 const ManageEmailGroupMembers = () => {
     const [allUsers, setAllUsers] = useState([]);
@@ -83,70 +85,74 @@ const ManageEmailGroupMembers = () => {
     };
 
     return (
-        <div className="container">
-            <h2>Manage Email Group Members</h2>
+        <>
+            <Header />
+            <div className="manage-group-main">
+                <div className="manage-group-card">
+                    <h2>Manage Email Group Members</h2>
 
-            {message && <p style={{ color: "green" }}>{message}</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+                    {message && <p className="success-msg">{message}</p>}
+                    {error && <p className="error-msg">{error}</p>}
 
-            <div style={{ marginBottom: "1rem" }}>
-                <label>Select Email Group:</label>
-                <select
-                    value={selectedGroup}
-                    onChange={(e) => setSelectedGroup(e.target.value)}
-                >
-                    <option value="">-- Select Group --</option>
-                    {allGroups.map((group) => (
-                        <option key={group.id} value={group.name}>
-                            {group.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {selectedGroup && (
-                <>
-                    <div>
-                        <label>Select User to Add:</label>
+                    <div className="form-block">
+                        <label>Select Email Group:</label>
                         <select
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
+                            value={selectedGroup}
+                            onChange={(e) => setSelectedGroup(e.target.value)}
                         >
-                            <option value="">-- Select User --</option>
-                            {allUsers.map((user) => (
-                                <option key={user.id} value={user.id}>
-                                    {user.name} ({user.email})
+                            <option value="">-- Select Group --</option>
+                            {allGroups.map((group) => (
+                                <option key={group.id} value={group.name}>
+                                    {group.name}
                                 </option>
                             ))}
                         </select>
-                        <button onClick={handleAdd} disabled={!userId} style={{ marginLeft: "1rem" }}>
-                            ➕ Add User
-                        </button>
                     </div>
 
-                    <div style={{ marginTop: "2rem" }}>
-                        <h3>Current Members:</h3>
-                        {members.length === 0 ? (
-                            <p>No members in this group.</p>
-                        ) : (
-                            <ul>
-                                {members.map((user) => (
-                                    <li key={user.id}>
-                                        {user.name} ({user.email})
-                                        <button
-                                            onClick={() => handleRemove(user.id)}
-                                            style={{ marginLeft: "1rem" }}
-                                        >
-                                            ❌ Remove
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                </>
-            )}
-        </div>
+                    {selectedGroup && (
+                        <>
+                            <div className="form-block">
+                                <label>Select User to Add:</label>
+                                <div className="add-user-row">
+                                    <select
+                                        value={userId}
+                                        onChange={(e) => setUserId(e.target.value)}
+                                    >
+                                        <option value="">-- Select User --</option>
+                                        {allUsers.map((user) => (
+                                            <option key={user.id} value={user.id}>
+                                                {user.name} ({user.email})
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <button onClick={handleAdd} disabled={!userId}>
+                                        ➕ Add User
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="member-list">
+                                <h3>Current Members:</h3>
+                                {members.length === 0 ? (
+                                    <p>No members in this group.</p>
+                                ) : (
+                                    <ul>
+                                        {members.map((user) => (
+                                            <li key={user.id}>
+                                                {user.name} ({user.email})
+                                                <button onClick={() => handleRemove(user.id)}>
+                                                    ❌ Remove
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        </>
     );
 };
 

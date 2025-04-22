@@ -4,6 +4,8 @@ import TeamService from "../../services/TeamService";
 import UserService from "../../services/UserService";
 import EmailGroupService from "../../services/EmailGroupService";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/common/Header"; // ✅ Include the header
+import "../../styles/createteampage.css"; // ✅ Scoped CSS
 
 const CreateTeamPage = () => {
     const [teamName, setTeamName] = useState("");
@@ -19,14 +21,12 @@ const CreateTeamPage = () => {
             try {
                 const users = await UserService.getAllUsers();
                 setAllUsers(users);
-
                 const groups = await EmailGroupService.getAllGroups();
                 setEmailGroups(groups);
             } catch (err) {
                 console.error("Error fetching data:", err);
             }
         };
-
         fetchInitialData();
     }, []);
 
@@ -80,62 +80,61 @@ const CreateTeamPage = () => {
     };
 
     return (
-        <div className="container">
-            <h2>Create New Team</h2>
+        <>
+            <Header />
+            <div className="create-team-main">
+                <div className="create-team-card">
+                    <h2>Create New Team</h2>
 
-            {message && <p style={{ color: "green" }}>{message}</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+                    {message && <p className="success-msg">{message}</p>}
+                    {error && <p className="error-msg">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <label>Team Name:</label>
-                <input
-                    type="text"
-                    value={teamName}
-                    onChange={(e) => setTeamName(e.target.value)}
-                    required
-                />
+                    <form onSubmit={handleSubmit}>
+                        <label>Team Name:</label>
+                        <input
+                            type="text"
+                            value={teamName}
+                            onChange={(e) => setTeamName(e.target.value)}
+                            required
+                        />
 
-                <label>User Emails (comma-separated):</label>
-                <textarea
-                    value={userEmails}
-                    onChange={(e) => setUserEmails(e.target.value)}
-                    placeholder="example1@email.com, example2@email.com"
-                    required
-                />
+                        <label>User Emails (comma-separated):</label>
+                        <textarea
+                            value={userEmails}
+                            onChange={(e) => setUserEmails(e.target.value)}
+                            placeholder="example1@email.com, example2@email.com"
+                            required
+                        />
 
-                <label>Quick Add User from Dropdown:</label>
-                <select onChange={(e) => handleUserAdd(e.target.value)} defaultValue="">
-                    <option value="" disabled>
-                        Select user to add
-                    </option>
-                    {allUsers.map((user) => (
-                        <option key={user.id} value={user.email}>
-                            {user.name} ({user.email})
-                        </option>
-                    ))}
-                </select>
+                        <label>Quick Add User from Dropdown:</label>
+                        <select onChange={(e) => handleUserAdd(e.target.value)} defaultValue="">
+                            <option value="" disabled>Select user to add</option>
+                            {allUsers.map((user) => (
+                                <option key={user.id} value={user.email}>
+                                    {user.name} ({user.email})
+                                </option>
+                            ))}
+                        </select>
 
-                <label style={{ marginTop: "1rem" }}>Add All Users from Email Group:</label>
-                <select onChange={(e) => handleAddGroupMembers(e.target.value)} defaultValue="">
-                    <option value="" disabled>
-                        Select email group
-                    </option>
-                    {emailGroups.map((group) => (
-                        <option key={group.id} value={group.name}>
-                            {group.name}
-                        </option>
-                    ))}
-                </select>
+                        <label>Add All Users from Email Group:</label>
+                        <select onChange={(e) => handleAddGroupMembers(e.target.value)} defaultValue="">
+                            <option value="" disabled>Select email group</option>
+                            {emailGroups.map((group) => (
+                                <option key={group.id} value={group.name}>
+                                    {group.name}
+                                </option>
+                            ))}
+                        </select>
 
-                <button type="submit" style={{ marginTop: "1.5rem" }}>
-                    Create Team
-                </button>
-            </form>
+                        <button type="submit" style={{ marginTop: "1.5rem" }}>Create Team</button>
+                    </form>
 
-            <button onClick={() => navigate("/teams")} style={{ marginTop: "1rem" }}>
-                ← Back to Team List
-            </button>
-        </div>
+                    <button className="back-btn" onClick={() => navigate("/teams")}>
+                        ← Back to Team List
+                    </button>
+                </div>
+            </div>
+        </>
     );
 };
 

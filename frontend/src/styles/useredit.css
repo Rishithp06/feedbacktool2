@@ -1,0 +1,66 @@
+.user-edit-main {
+    min-height: 90vh;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    padding: 3rem 1rem;
+    overflow-y: auto;
+  }
+  
+  .user-edit-card {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .user-edit-card h2 {
+    text-align: center;
+    color: #4f46e5;
+    margin-bottom: 2rem;
+  }
+  
+  .user-edit-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  
+  .user-edit-card label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .user-edit-card input,
+  .user-edit-card select {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+  }
+  
+  .user-edit-card input:focus,
+  .user-edit-card select:focus {
+    border-color: #4f46e5;
+  }
+  
+  .user-edit-card button[type="submit"] {
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .user-edit-card button[type="submit"]:hover {
+    background-color: #3730a3;
+  }
+  
