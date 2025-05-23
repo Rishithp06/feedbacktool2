@@ -31,6 +31,7 @@ import CheckFeedbackPage from './pages/feedback/CheckFeedbackPage';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import SuperProtectedRoute from './components/common/SuperProtectedRoute';
 import FeedbackHomePage from './pages/feedback/FeedbackHome';
+import ExcelTeamUpload from './pages/team/ExcelTeamUpload';
 function App() {
   return (
     <Router>
@@ -57,6 +58,7 @@ function App() {
               </PrivateRoute>
             }
           />
+
           <Route
             path="/users"
             element={
@@ -221,6 +223,18 @@ function App() {
                 <>
                   
                   <GiveFeedbackPage />
+                </>
+              </PrivateRoute>
+            }
+          />
+
+<Route
+            path="/excel"
+            element={
+              <PrivateRoute>
+                <>
+                  
+                  <ExcelTeamUpload/>
                 </>
               </PrivateRoute>
             }

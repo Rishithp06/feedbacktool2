@@ -5,7 +5,8 @@ const {
     getTeamMembers,
     addUserToTeam,
     removeUserFromTeam,
-    deleteTeam
+    deleteTeam,
+    uploadTeamExcel
 } = require("./teamController");
 
 const { authMiddleware, isAdmin } = require("./userMiddleware");
@@ -14,6 +15,9 @@ const router = express.Router();
 
 // ✅ Create a Team (Admins & Super Admins Only)
 router.post("/create", authMiddleware, isAdmin, createTeam);
+
+// ✅ Upload Excel to Auto Create Teams and Members
+router.post("/upload-excel", authMiddleware, isAdmin, uploadTeamExcel);
 
 // ✅ Get All Teams (Any Authenticated User)
 router.get("/all", authMiddleware, getAllTeams);

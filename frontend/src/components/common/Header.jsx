@@ -41,9 +41,9 @@ const Header = () => {
                   <li className="dropdown-item">
                     <Link to="/register/admin" className="dropdown-link">Admin</Link>
                   </li>
-                  <li className="dropdown-item">
+                  {/* <li className="dropdown-item">
                     <Link to="/register/super-admin" className="dropdown-link">Super Admin</Link>
-                  </li>
+                  </li> */}
                 </ul>
               )}
             </li>

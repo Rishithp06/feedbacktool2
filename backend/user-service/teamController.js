@@ -1,4 +1,92 @@
 const pool = require("../config/db");
+const multer = require("multer");
+const xlsx = require("xlsx");
+const { v4: uuidv4 } = require("uuid");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage }).single("file");
+
+const uploadTeamExcel = [
+  upload, // multer middleware
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded." });
+      }
+
+      const workbook = xlsx.read(req.file.buffer, { type: "buffer" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = xlsx.utils.sheet_to_json(sheet);
+
+      const createdTeams = new Set();
+
+      for (const row of rows) {
+        const teamName = row["Team Name"];
+        const memberName = row["Member Name"];
+        const memberEmail = row["Member Email"];
+
+        if (!teamName || !memberName || !memberEmail) continue;
+
+        // ✅ 1. Ensure user exists
+        let userResult = await pool.query("SELECT * FROM users WHERE email = $1", [memberEmail]);
+        let user;
+
+        if (userResult.rows.length === 0) {
+          const inserted = await pool.query(
+            "INSERT INTO users (id, name, email, role, password_hash) VALUES ($1, $2, $3, 'regular_user', '') RETURNING *",
+            [uuidv4(), memberName, memberEmail]
+          );
+          user = inserted.rows[0];
+        } else {
+          user = userResult.rows[0];
+        }
+
+        // ✅ 2. Create team if not already done in this run
+        let team;
+        if (!createdTeams.has(teamName)) {
+          const existingTeam = await pool.query("SELECT * FROM teams WHERE name = $1", [teamName]);
+
+          if (existingTeam.rows.length === 0) {
+            const inserted = await pool.query(
+              "INSERT INTO teams (id, name, created_by) VALUES ($1, $2, $3) RETURNING *",
+              [uuidv4(), teamName, req.user.id]
+            );
+            team = inserted.rows[0];
+          } else {
+            team = existingTeam.rows[0];
+          }
+
+          createdTeams.add(teamName);
+        } else {
+          const fetchedTeam = await pool.query("SELECT * FROM teams WHERE name = $1", [teamName]);
+          team = fetchedTeam.rows[0];
+        }
+
+        const teamId = team.id;
+
+        // ✅ 3. Add user to team if not already present
+        const exists = await pool.query(
+          "SELECT * FROM team_members WHERE team_id = $1 AND user_id = $2",
+          [teamId, user.id]
+        );
+
+        if (exists.rows.length === 0) {
+          await pool.query(
+            "INSERT INTO team_members (id, team_id, user_id) VALUES ($1, $2, $3)",
+            [uuidv4(), teamId, user.id]
+          );
+        }
+      }
+
+      res.json({ message: "Excel upload processed successfully." });
+    } catch (err) {
+      console.error("❌ Excel Upload Error:", err);
+      res.status(500).json({ message: "Failed to process Excel", error: err.message });
+    }
+  },
+];
+
+module.exports.uploadTeamExcel = uploadTeamExcel;
 
 // ✅ Create a Team with Manual User Entry (Admins Only)
 exports.createTeam = async (req, res) => {

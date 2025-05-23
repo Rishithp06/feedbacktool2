@@ -13,6 +13,24 @@ const getAuthHeaders = () => {
 };
 
 const TeamService = {
+    // ✅ Upload Excel file to auto-create teams and members
+    uploadExcel: async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      const token = localStorage.getItem("token");
+  
+      const response = await fetch(`${API_BASE}/upload-excel`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+  
+      return response.json();
+    },
+  
   // ✅ Create a new team with a list of user emails (Admin only)
   createTeam: async (teamName, userEmails) => {
     const response = await fetch(`${API_BASE}/create`, {
