@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
-import Header from '../components/common/Header'; // Import the Header component
-import '../styles/login.css'; // Import the CSS for styling
+import Header from '../components/common/Header';
+import '../styles/login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -18,11 +18,9 @@ const Login = () => {
 
     try {
       const response = await login({ email, password });
-      console.log('Login successful:', response);
       localStorage.setItem('token', response.token);
-      navigate('/'); // Redirect to home or protected page
+      navigate('/'); // Default redirect after local login
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
@@ -31,10 +29,11 @@ const Login = () => {
 
   return (
     <>
-      <Header /> {/* Add the Header component */}
+      <Header />
       <div className="login-page">
         <div className="login-container">
           <h1 className="login-title">Login</h1>
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Email:</label>
@@ -61,8 +60,15 @@ const Login = () => {
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
+
+          <div className="azure-login">
+            <p>or</p>
+            <a href="http://localhost:5001/auth/azure" className="azure-login-button">
+              Login with Nokia Azure SSO
+            </a>
+          </div>
+
           <div className="login-links">
-            
             <Link to="/forgot-password" className="link">Forgot Password?</Link>
           </div>
         </div>

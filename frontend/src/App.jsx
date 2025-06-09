@@ -32,6 +32,7 @@ import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import SuperProtectedRoute from './components/common/SuperProtectedRoute';
 import FeedbackHomePage from './pages/feedback/FeedbackHome';
 import ExcelTeamUpload from './pages/team/ExcelTeamUpload';
+import AuthRedirect from './pages/AuthRedirect';
 function App() {
   return (
     <Router>
@@ -58,7 +59,7 @@ function App() {
               </PrivateRoute>
             }
           />
-
+<Route path='/auth/redirect' element={<AuthRedirect/>}/>
           <Route
             path="/users"
             element={
@@ -84,12 +85,12 @@ function App() {
           <Route
             path="/profile"
             element={
-              <AdminProtectedRoute>
+              
                 <>
                   
                   <ProfilePage />
                 </>
-              </AdminProtectedRoute>
+              
             }
           />
           <Route
